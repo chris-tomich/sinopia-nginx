@@ -15,8 +15,10 @@ else
 fi
 
 if [ -z "$CERT" ] && [ -z "$KEY" ]; then
-    sed -i "s/____NGINX_SSL_CERT____/$CERT/g" /etc/nginx/sites-available/default-ssl
-    sed -i "s/__NGINX_SSL_CERT_KEY__/$CERT/g" /etc/nginx/sites-available/default-ssl
+    CERTLOCATION="/etc/nginx/ssl$CERT"
+    KEYLOCATION="/etc/nginx/ssl$KEY"
+    sed -i "s/____NGINX_SSL_CERT____/$CERTLOCATION/g" /etc/nginx/sites-available/default-ssl
+    sed -i "s/__NGINX_SSL_CERT_KEY__/$KEYLOCATION/g" /etc/nginx/sites-available/default-ssl
     mv /etc/nginx/sites-available/default-ssl /etc/nginx/sites-available/default
     rm /etc/nginx/sites-available/default-non-ssl
 else

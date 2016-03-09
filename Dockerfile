@@ -6,10 +6,14 @@ RUN apt-get update && apt-get install -y supervisor git build-essential wget ngi
 RUN update-rc.d -f nginx remove
 RUN rm -f /etc/nginx/nginx.conf
 
+RUN mkdir /etc/nginx/ssl
+
 ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 ADD nginx-default.conf /etc/nginx/nginx-default.conf
-ADD default /etc/nginx/sites-available/default
+ADD default-non-ssl /etc/nginx/sites-available/default-non-ssl
+ADD default-ssl /etc/nginx/sites-available/default-ssl
 
+VOLUME ["/etc/nginx/ssl"]
 VOLUME ["/etc/nginx/nginx.conf"]
 VOLUME ["/etc/nginx/sites-available"]
 
