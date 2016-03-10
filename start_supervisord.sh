@@ -16,7 +16,7 @@ fi
 
 # Check whether the default site config has been created yet. If it hasn't then build both it and the dhparam.pem.
 # As this is building dhparam.pem the first time it is run, it will take quite a long time to start the first time.
-if ! [ -f /etc/nginx/sites-available/default ]; then
+if [ -f /etc/nginx/sites-available/default-ssl ] || [ -f /etc/nginx/sites-available/default-non-ssl ]; then
     if ! [ -z "$CERT" ] && ! [ -z "$KEY" ]; then
         openssl dhparam -out /etc/ssl/certs/dhparam.pem 4096
         CERTLOCATION="\/etc\/nginx\/ssl\/$CERT"
