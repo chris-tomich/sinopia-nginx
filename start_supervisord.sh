@@ -14,7 +14,7 @@ else
     export SINOPIACONF=/var/lib/sinopia/config-default.yaml
 fi
 
-if [ -z "$CERT" ] && [ -z "$KEY" ]; then
+if ! [ -z "$CERT" ] && ! [ -z "$KEY" ]; then
     CERTLOCATION="/etc/nginx/ssl$CERT"
     KEYLOCATION="/etc/nginx/ssl$KEY"
     sed -i "s/____NGINX_SSL_CERT____/$CERTLOCATION/g" /etc/nginx/sites-available/default-ssl
