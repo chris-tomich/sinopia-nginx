@@ -2,7 +2,22 @@ FROM ubuntu:latest
 
 MAINTAINER Chris Tomich "chris.tomich@oystr.co"
 
-RUN apt-get update && apt-get install -y supervisor git build-essential wget nginx
+RUN apt-get update \
+    && apt-get install -y build-essential wget python \
+    && cd /tmp \
+    && wget https://nodejs.org/dist/v4.3.2/node-v4.3.2.tar.gz \
+    && mkdir node \
+    && tar xzf node-v4.3.2.tar.gz --strip-components=1 -C ./node \
+    && cd /tmp/node \
+    && ./configure \
+    && make \
+    && make install \
+    && rm -rf /tmp/* \
+    && apt-get remove -y --auto-remove build-essential wget python \
+    && apt-get install -y git supervisor nginx \
+    && apt-get autoremove -y \
+    && apt-get clean -y
+
 RUN update-rc.d -f nginx remove
 RUN rm -f /etc/nginx/nginx.conf
 
@@ -16,16 +31,6 @@ ADD default-ssl /etc/nginx/sites-available/default-ssl
 VOLUME ["/etc/nginx/ssl"]
 VOLUME ["/etc/nginx/nginx.conf"]
 VOLUME ["/etc/nginx/sites-available"]
-
-WORKDIR /tmp
-RUN wget https://nodejs.org/dist/v4.3.2/node-v4.3.2.tar.gz
-RUN mkdir node
-RUN tar xzf node-v4.3.2.tar.gz --strip-components=1 -C ./node
-
-WORKDIR /tmp/node
-RUN ./configure
-RUN make
-RUN make install
 
 WORKDIR /var/lib
 RUN npm install -g sinopia
